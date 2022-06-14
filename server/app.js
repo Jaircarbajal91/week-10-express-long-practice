@@ -5,6 +5,7 @@ const path = require('node:path')
 
 // app.use('/static', express.static(path.join(__dirname, 'assets')))
 app.use('/static', express.static('assets'))
+app.use(express.json())
 
 // For testing purposes, GET /
 app.get('/', (req, res) => {
