@@ -1,5 +1,4 @@
-// ------------------------------  SERVER DATA ------------------------------  
-
+// ------------------------------  SERVER DATA ------------------------------
 let nextDogId = 1;
 function getNewDogId() {
   const newDogId = nextDogId;
@@ -18,13 +17,13 @@ const dogs = [
   }
 ];
 
-// ------------------------------  MIDDLEWARES ------------------------------ 
+// ------------------------------  MIDDLEWARES ------------------------------
 
 const validateDogInfo = (req, res, next) => {
   if (!req.body || !req.body.name) {
     const err = new Error("Dog must have a name");
     err.statusCode = 400;
-    next(err);
+    return next(err);
   }
   next();
 };
@@ -34,13 +33,14 @@ const validateDogId = (req, res, next) => {
   if (!dog) {
     const err = new Error("Couldn't find dog with that dogId")
     err.statusCode = 404;
-    throw err;
-    // return next(err); // alternative to throwing it
+    console.log(err)
+    // throw err;
+    return next(err); // alternative to throwing it
   }
   next();
 }
 
-// ------------------------------  ROUTE HANDLERS ------------------------------  
+// ------------------------------  ROUTE HANDLERS ------------------------------
 
 // GET /dogs
 const getAllDogs = (req, res) => {
@@ -82,6 +82,22 @@ const deleteDog = (req, res) => {
   res.json({ message: "success" });
 };
 
-// ------------------------------  ROUTER ------------------------------  
+// ------------------------------  ROUTER ------------------------------
 
 // Your code here
+const express = require('express');
+const router = express.Router();
+
+const handleErr = (err, req, res, next) => {
+  console.log(err.message);
+  res.statusCode = err.statusCode;
+  res.send(err);
+}
+
+router.get('/', getAllDogs);
+router.get('/:dogId', validateDogId, getDogById);
+router.post('/', validateDogInfo, handleErr, createDog);
+router.put('/:dogId', validateDogId, validateDogInfo, handleErr,  updateDog);
+router.delete('/:dogId', validateDogId, deleteDog);
+
+module.exports = router;

@@ -1,7 +1,9 @@
 const express = require('express');
+const req = require('express/lib/request');
 const app = express();
 
 const path = require('node:path')
+const dogs = require('./routes/dogs.js')
 
 // app.use('/static', express.static(path.join(__dirname, 'assets')))
 app.use('/static', express.static('assets'))
@@ -16,6 +18,7 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use('/dogs', dogs)
 
 // For testing purposes, GET /
 app.get('/', (req, res) => {
