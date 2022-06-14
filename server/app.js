@@ -1,6 +1,11 @@
 const express = require('express');
 const app = express();
 
+const path = require('node:path')
+
+// app.use('/static', express.static(path.join(__dirname, 'assets')))
+app.use('/static', express.static('assets'))
+
 // For testing purposes, GET /
 app.get('/', (req, res) => {
   res.json("Express server running. No content provided at root level. Please use another route.");
@@ -19,5 +24,5 @@ app.get('/test-error', async (req, res) => {
   throw new Error("Hello World!")
 });
 
-const port = 5000;
+const port = 8000;
 app.listen(port, () => console.log('Server is listening on port', port));
