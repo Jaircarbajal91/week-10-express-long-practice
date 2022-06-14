@@ -23,7 +23,7 @@ const validateDogInfo = (req, res, next) => {
   if (!req.body || !req.body.name) {
     const err = new Error("Dog must have a name");
     err.statusCode = 400;
-    return next(err);
+    next(err);
   }
   next();
 };
@@ -88,16 +88,10 @@ const deleteDog = (req, res) => {
 const express = require('express');
 const router = express.Router();
 
-const handleErr = (err, req, res, next) => {
-  console.log(err.message);
-  res.statusCode = err.statusCode;
-  res.send(err);
-}
-
 router.get('/', getAllDogs);
 router.get('/:dogId', validateDogId, getDogById);
-router.post('/', validateDogInfo, handleErr, createDog);
-router.put('/:dogId', validateDogId, validateDogInfo, handleErr,  updateDog);
+router.post('/', validateDogInfo, createDog);
+router.put('/:dogId', validateDogId, validateDogInfo,  updateDog);
 router.delete('/:dogId', validateDogId, deleteDog);
 
 module.exports = router;

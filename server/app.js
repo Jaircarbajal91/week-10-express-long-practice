@@ -5,6 +5,8 @@ const app = express();
 const path = require('node:path')
 const dogs = require('./routes/dogs.js')
 
+require('dotenv').config();
+
 // app.use('/static', express.static(path.join(__dirname, 'assets')))
 app.use('/static', express.static('assets'))
 app.use(express.json())
@@ -45,8 +47,12 @@ app.use((req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-  console.log("Error: Not Found")
-  res.send("The requested resource could not be found.")
+  console.log(err.message)
+  res.json({
+    message: "Something went wrong",
+    statusCode: err.statusCode || 500,
+    stack: err.stack
+  })
   res.statusCode = err.statusCode
 })
 
